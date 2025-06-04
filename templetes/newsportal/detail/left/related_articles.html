@@ -1,0 +1,24 @@
+<section class="related-articles mt-5">
+  <h3 class="mb-4 section-title">
+    <span>Related Articles</span>
+  </h3>
+  <div class="row row-cols-1 row-cols-md-2 g-4">
+    <!-- Related Item 1 -->
+    {% for related_post in related_posts %}
+    <div class="col">
+      <div class="card h-100 shadow-sm news-card">
+        <img src="{{ related_post.featured_image.url }}" class="card-img-top" alt="Related News 1" />
+        <div class="card-body">
+          <h5 class="card-title">{{ related_post.title }}</h5>
+          <a href="{% url 'post-detail' related_post.pk %}" class="btn btn-outline-success btn-sm mt-2">Read More</a>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">{{ post.published_at|date:"F j, Y" }}</small>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+
+  </div>
+</section>
