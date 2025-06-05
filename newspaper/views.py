@@ -74,8 +74,17 @@ class PostDetailView(SidebarMixin, DetailView):
    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+
+        current_post = self.object
+        current_post.views_count += 1
+        current_post.save()
+
+        
         context['related_posts'] = Post.objects.filter(
             published_at__isnull=False, status='active',category=self.object.category
         ).order_by('-published_at','-views_count')[:2]
+    
+    
 
         return context
