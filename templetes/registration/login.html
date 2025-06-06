@@ -1,0 +1,29 @@
+{% extends "newsportal/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Login</h2>
+                </div>
+                <div class="card-body">
+                    {% if form.errors %}
+                    <div class="alert alert-danger">Your username and password didn't match. please try again</div>
+                    {% endif %}
+                    <form action="{% url 'accounts:login' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ next }}" />
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </form>
+                    <p>
+                        Don't have an account? <a href="{% url 'accounts:register' %}">Register here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
