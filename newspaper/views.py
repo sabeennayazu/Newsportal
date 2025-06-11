@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from newspaper.models import Post
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, View
 from django.utils import timezone
 from datetime import timedelta
 from newspaper.models import Advertisement
+from newspaper.forms import CommentForm
 
 # Create your views here.
 class SidebarMixin:
@@ -88,3 +89,30 @@ class PostDetailView(SidebarMixin, DetailView):
     
 
         return context
+
+class Commentview(View):
+    def post(self, request, *args, **kwargs):
+        post_id = request.POST['post']
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.save()
+            return redirect('post-detail', post_id)
+        else:
+            post = Post.objects.get(pk=post_id)
+            popular_posts = Post.objects.filter(
+                published_at__isnull=False, status='active'
+            ).order_by('-published_at')[:5]
+            Advertisement = (
+                Advertisement.objects.all().order_by('-created_at').first()
+            )
+            return render(request, 'newsportal/detail/detail.html',
+             {
+                'post': post,
+                'form': form,
+                'popular_posts': popular_posts,
+                'advertisement': Advertisement,
+                
+                },
+                )
