@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from newspaper.models import Post
+from newspaper.models import Category, Post, Tag
 from django.views.generic import ListView, DetailView, View
 from django.utils import timezone
 from datetime import timedelta
@@ -116,3 +116,41 @@ class Commentview(View):
                 
                 },
                 )
+
+class PostByCategoryView(SidebarMixin, ListView):
+    model = Post
+    template_name = 'newsportal/list/list.html'
+    context_object_name = 'posts'
+    paginate_by = 1
+
+    def get_queryset(self):
+        query = super().get_queryset()
+        query = query.filter(
+            published_at__isnull=False, status='active',
+            category__id=self.kwargs['category_id'],
+        ).order_by('-published_at')
+        return query
+
+class CategoryListView(ListView):
+    model = Category
+    template_name = 'newsportal/categories.html'
+    context_object_name = 'categories'
+
+class PostByTagView(SidebarMixin, ListView):
+    model = Post
+    template_name = 'newsportal/list/list.html'
+    context_object_name = 'posts'
+    paginate_by = 1
+
+    def get_queryset(self):
+        query = super().get_queryset()
+        query = query.filter(
+            published_at__isnull=False, status='active',
+            tags__id=self.kwargs['tags_id'],
+        ).order_by('-published_at')
+        return query
+
+class TagListView(ListView):
+    model = Tag
+    template_name = 'newsportal/tags.html'
+    context_object_name = 'tags'

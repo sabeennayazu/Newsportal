@@ -20,17 +20,17 @@
           <ul class="dropdown-menu">
             {% for category in categories %}
             <li>
-              <a class="dropdown-item" href="category.html">{{ category.name|title }}</a>
+              <a class="dropdown-item" href="{% url 'post-by-category' category.pk %}">{{ category.name|title }}</a>
             </li>
             {% endfor %}
             <li>
               <hr class="dropdown-divider" />
             </li>
             <li>
-              <a class="dropdown-item" href="all-categories.html">All Categories</a>
+              <a class="dropdown-item" href="{% url 'categories' %}">All Categories</a>
             </li>
             <li>
-              <a class="dropdown-item" href="all-tags.html">All Tags</a>
+              <a class="dropdown-item" href="{% url 'tag-list' %}">All Tags</a>
             </li>
           </ul>
         </li>
