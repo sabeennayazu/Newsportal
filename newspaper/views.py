@@ -1,10 +1,14 @@
 from django.shortcuts import render,redirect
-from newspaper.models import Category, Post, Tag
-from django.views.generic import ListView, DetailView, View
+from django.urls import reverse_lazy
+from newspaper.forms import ContactForm, NewsletterForm
+from newspaper.models import Category, Post, Tag,Contact, NewsLetter
+from django.views.generic import ListView, DetailView, View, CreateView
+from django.contrib.messages.views import SuccessMessageMixin
 from django.utils import timezone
 from datetime import timedelta
 from newspaper.models import Advertisement
 from newspaper.forms import CommentForm
+from django.http import JsonResponse
 
 # Create your views here.
 class SidebarMixin:
@@ -154,3 +158,24 @@ class TagListView(ListView):
     model = Tag
     template_name = 'newsportal/tags.html'
     context_object_name = 'tags'
+
+class ContactCreateView(SuccessMessageMixin, CreateView):
+    model = Contact
+    template_name = 'newsportal/contact.html'
+    form_class = ContactForm
+    success_url = reverse_lazy("contact")
+    success_message = "Your message has been sent successfully!"
+
+class NewsletterView(View):
+
+    def post(self, request):
+        is_ajax = request.headers.get('x-requested-with')
+        if is_ajax == 'XMLHttpRequest':
+            form = NewsletterForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return JsonResponse({'success': True, 'message': 'Thank you for subscribing to our newsletter!'}, status=201)
+            else:
+                return JsonResponse({'success': False, 'message': 'cannot subscribe'},status=400)
+        else:
+             return JsonResponse({'success': False, 'message': 'Cannot process. Must be an AJAX request'}, status=400)
