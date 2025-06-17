@@ -10,5 +10,7 @@ urlpatterns = [
     path("categories/", views.CategoryListView.as_view(), name='categories'),
     path("tags/", views.TagListView.as_view(), name='tag-list'),
     path('contact/', views.ContactCreateView.as_view(), name='contact'),
+    path('about/', views.AboutView.as_view(), name='about'),
     path('newsletter/', views.NewsletterView.as_view(), name='newsletter'),
+    path('search/', views.PostSearchView.as_view(), name='search'),
 ]

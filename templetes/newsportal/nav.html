@@ -35,7 +35,7 @@
           </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="about.html">About Us</a>
+          <a class="nav-link" href="{% url 'about' %}">About Us</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'contact' %}">Contact Us</a>
@@ -44,7 +44,7 @@
           <a class="nav-link" href="#newsletter-section">Newsletter</a>
         </li>
       </ul>
-      <form class="d-flex me-3" role="search">
+      <form class="d-flex me-3" role="search" action="{% url 'search' %}" method="get">
         <input class="form-control form-control-sm me-2" type="search" placeholder="Search..." aria-label="Search" />
         <button class="btn btn-outline-success btn-sm" type="submit">
           <i class="bi bi-search"></i>

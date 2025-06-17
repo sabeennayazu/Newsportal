@@ -27,24 +27,37 @@
   <!-- Custom JS -->
 
   <script src="{% static 'js/script.js' %}"></script>
+  <!-- Update only the script section -->
   <script>
-    $("#newsletter_side_form").submit(function (event) {
-      event.preventDefault(); // Prevent the default form submission
-      let serializedData = $(this).serialize(); // Serialize the form data
+    $(document).ready(function () {
+      $("#newsletter_side_form").on('submit', function (e) {
+        e.preventDefault();
+        let form = $(this);
 
-      // Perform  AJAX request to submit the form
-      $.ajax({
-        type: "POST",
-        url: "{% url 'newsletter' %}",
-        data: serializedData,
-        success: function (response) {
-          console.log("success", response)
-        },
-        error: function (response) {
-          console.error("failure", response);
-        }
-      })
-    })
+        $.ajax({
+          type: "POST",
+          url: "{% url 'newsletter' %}",
+          data: form.serialize(),
+          success: function (response) {
+            $("#newsletter_side_message").html(`
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            ${response.message}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    `);
+            form[0].reset();
+          },
+          error: function (response) {
+            $("#newsletter_side_message").html(`
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            ${response.responseJSON.message}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    `);
+          }
+        });
+      });
+    });
   </script>
 </body>
 
